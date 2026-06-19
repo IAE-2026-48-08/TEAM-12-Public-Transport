@@ -66,4 +66,21 @@ Berikut adalah catatan rekap penggunaan AI untuk membantu menyelesaikan kendala 
 ---
 
 ### 2. Bagian Layanan Tiket & Pembayaran (Bayu - 102022400251)
-*(Dapat ditambahkan oleh Bayu di sini setelah pengerjaannya selesai)*
+
+#### Tugas 2 (Docker & Database)
+*   Membuat Dockerfile berbasis php:8.2-fpm dan memasang ekstensi pdo_mysql untuk koneksi database.
+*   Mengatur konfigurasi Nginx default agar request PHP-FPM diteruskan ke port 9000 container aplikasi.
+*   Menyusun seeder data tiket dan transaksi pembayaran untuk inisialisasi awal database.
+*   Mengatasi error database connection refused pada container Laravel saat pertama kali dinyalakan bersama MySQL.
+
+#### Tugas 3 (SSO, SOAP, RabbitMQ)
+*   Membuat logika penanganan dan penyimpanan log audit XML untuk dikirimkan via client SOAP.
+*   Membuat consumer/subscriber RabbitMQ di Laravel menggunakan package php-amqplib untuk menangkap event schedule.created dari service Rute-Jadwal.
+*   Mengimplementasikan middleware validasi token M2M dari SSO dengan mencocokkan nim dan api_key.
+*   Mengatasi masalah antrean RabbitMQ yang tidak otomatis terbuat (declare queue) saat container consumer dijalankan.
+
+#### Tugas Besar (API Gateway & Jaringan Docker)
+*   Menhubungkan container Nginx ticket-pembayaran-web ke jaringan bersama kelompok.
+*   Menguji koneksi pemanggilan API internal ke container rute-jadwal-app untuk mencocokkan ketersediaan jadwal sebelum tiket dibuat.
+*   Mengatur routing /central agar mengarah ke dashboard integrasi web UI miliknya.
+**
