@@ -1,0 +1,19 @@
+type Delay {
+    id: ID!
+    schedule_code: String!
+    reason: String!
+    delay_minutes: Int!
+}
+
+type Query {
+    delays: [Delay!]! @all
+    delay(id: ID! @eq): Delay @find
+}
+
+type Mutation {
+    createDelay(
+        schedule_code: String!
+        reason: String!
+        delay_minutes: Int!
+    ): Delay @create
+}

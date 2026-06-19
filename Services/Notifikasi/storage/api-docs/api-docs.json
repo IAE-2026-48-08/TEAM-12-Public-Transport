@@ -1,0 +1,36 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Notification Delay Service API",
+        "description": "API untuk Service Notifikasi Delay",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:8000",
+            "description": "Local Server"
+        }
+    ],
+    "paths": {
+        "/api/v1/delays": {
+            "get": {
+                "tags": [
+                    "Delays"
+                ],
+                "summary": "Get all delays",
+                "operationId": "dc8d2e8add249960f8e02f253fd45ed6",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Delays",
+            "description": "Delays"
+        }
+    ]
+}
