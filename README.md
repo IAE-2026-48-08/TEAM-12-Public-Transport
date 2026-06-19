@@ -36,6 +36,7 @@ docker exec -it ticket-pembayaran-app php artisan migrate --seed
 Setelah menyala, Anda dapat mengakses layanan melalui API Gateway di:
 *   API Rute & Jadwal: `http://localhost/api/v1/schedules`
 *   API Tiket & Pembayaran: `http://localhost/api/v1/tickets`
+*   API Notifikasi Delay: `http://localhost/api/v1/delays`
 
 ---
 
@@ -106,7 +107,7 @@ Berikut adalah catatan rekap penggunaan AI untuk membantu menyelesaikan kendala 
 
 
 #### Tugas Besar (API Gateway & Jaringan Docker)
-*Penyusunan dokumen analisis_tugas_3.md yang merinci justifikasi transaksi kritis (data delay jadwal) yang memerlukan audit SOAP dan notifikasi RabbitMQ.
+* Penyusunan dokumen analisis_tugas_3.md yang merinci justifikasi transaksi kritis (data delay jadwal) yang memerlukan audit SOAP dan notifikasi RabbitMQ.
 * Penyusunan Sequence Diagram untuk interaksi layanan notification-delay-service dengan SSO Dosen dan sistem Cloud Pusat.
 * Finalisasi pengujian end-to-end menggunakan Postman untuk memastikan sinkronisasi data antar-service melalui API Gateway.
 * Pemetaan role pengguna ke tabel lokal setelah berhasil menangkap payload JWT dari SSO Dosen.
