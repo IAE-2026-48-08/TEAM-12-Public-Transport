@@ -85,4 +85,28 @@ Berikut adalah catatan rekap penggunaan AI untuk membantu menyelesaikan kendala 
 *   Menguji koneksi pemanggilan API internal ke container rute-jadwal-app untuk mencocokkan ketersediaan jadwal sebelum tiket dibuat.
 **
 
+---
+
 ### 3. Bagian Notifikasi Delay (Renaya - 102022400154)
+
+#### Tugas 2 (Docker & Database)
+* Menginisialisasi arsitektur database notification_delay_db untuk menyimpan data log notifikasi dan antrean delay.
+* Menyusun skema migrasi tabel delays yang mencakup field schedule_code, reason, dan delay_minutes untuk kebutuhan tracking transaksi kritis.
+* Mengonfigurasi koneksi database di dalam container Docker agar terhubung dengan layanan mikro lainnya dalam satu network yang sama.
+
+
+
+#### Tugas 3 (SSO, SOAP, RabbitMQ)
+* Pengembangan Service untuk menangani notification delay secara asinkronus menggunakan RabbitMQ.
+* Implementasi RabbitMqService menggunakan pendekatan HTTP API (RabbitMQ Management Plugin) untuk pengiriman pesan event notification.
+* Pembuatan route API POST /api/test-rabbit untuk pengujian integrasi publisher ke antrean pesan.
+* Implementasi ApiKeyMiddleware untuk mengamankan akses API dengan verifikasi header X-IAE-KEY (NIM: 102022400154).
+* Integrasi AuditService untuk mengirimkan data transaksi ke sistem SOAP Legacy sebagai syarat validasi transaksi kritis.
+
+
+
+#### Tugas Besar (API Gateway & Jaringan Docker)
+*Penyusunan dokumen analisis_tugas_3.md yang merinci justifikasi transaksi kritis (data delay jadwal) yang memerlukan audit SOAP dan notifikasi RabbitMQ.
+* Penyusunan Sequence Diagram untuk interaksi layanan notification-delay-service dengan SSO Dosen dan sistem Cloud Pusat.
+* Finalisasi pengujian end-to-end menggunakan Postman untuk memastikan sinkronisasi data antar-service melalui API Gateway.
+* Pemetaan role pengguna ke tabel lokal setelah berhasil menangkap payload JWT dari SSO Dosen.
