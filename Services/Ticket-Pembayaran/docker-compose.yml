@@ -1,0 +1,91 @@
+services:
+  # PHP Application Service
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ticket-pembayaran-app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - .:/var/www
+    environment:
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=102022400251_ticket_pembayaran_service
+      - DB_USERNAME=root
+      - DB_PASSWORD=rootpassword
+      - REDIS_HOST=redis
+    depends_on:
+      - db
+      - redis
+    networks:
+      - ticket-network
+
+  # Nginx Web Server Service
+  web:
+    image: nginx:alpine
+    container_name: ticket-pembayaran-web
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+    networks:
+      - ticket-network
+
+  # MySQL Database Service
+  db:
+    image: mysql:8.0
+    container_name: ticket-pembayaran-db
+    restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password --skip-name-resolve
+    ports:
+      - "3307:3306"
+    environment:
+      - MYSQL_DATABASE=102022400251_ticket_pembayaran_service
+      - MYSQL_ROOT_PASSWORD=rootpassword
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - ticket-network
+
+  # Redis Service
+  redis:
+    image: redis:alpine
+    container_name: ticket-pembayaran-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - ticket-network
+
+  # Node Service for Vite Dev Server
+  node:
+    image: node:20-alpine
+    container_name: ticket-pembayaran-node
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - .:/var/www
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_PORT=5173
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    depends_on:
+      - app
+    networks:
+      - ticket-network
+
+networks:
+  ticket-network:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local
