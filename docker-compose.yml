@@ -1,9 +1,6 @@
 version: '3.8'
 
 services:
-  # =========================================================================
-  # 1. API GATEWAY (NGINX)
-  # =========================================================================
   gateway:
     image: nginx:alpine
     container_name: team-12-api-gateway
@@ -18,10 +15,6 @@ services:
     networks:
       - team-12-network
 
-  # =========================================================================
-  # 2. SERVICE: RUTE & JADWAL (Alvin)
-  # =========================================================================
-  # PHP Application Runner
   rute-jadwal-app:
     build:
       context: ./Services/Rute-Jadwal/vendor/laravel/sail/runtimes/8.5
@@ -46,9 +39,6 @@ services:
     networks:
       - team-12-network
 
-
-
-  # MySQL Database
   rute-jadwal-db:
     image: mysql:8.4
     container_name: rute-jadwal-db
@@ -61,10 +51,6 @@ services:
     networks:
       - team-12-network
 
-  # =========================================================================
-  # 3. SERVICE: TIKET & PEMBAYARAN (Bayu)
-  # =========================================================================
-  # PHP Application Runner
   ticket-pembayaran-app:
     build:
       context: ./Services/Ticket-Pembayaran
@@ -88,7 +74,6 @@ services:
     networks:
       - team-12-network
 
-  # Nginx Web Server
   ticket-pembayaran-web:
     image: nginx:alpine
     container_name: ticket-pembayaran-web
@@ -101,7 +86,6 @@ services:
     networks:
       - team-12-network
 
-  # MySQL Database
   ticket-pembayaran-db:
     image: mysql:8.0
     container_name: ticket-pembayaran-db
@@ -115,7 +99,6 @@ services:
     networks:
       - team-12-network
 
-  # Redis
   ticket-pembayaran-redis:
     image: redis:alpine
     container_name: ticket-pembayaran-redis
