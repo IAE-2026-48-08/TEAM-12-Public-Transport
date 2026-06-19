@@ -21,6 +21,7 @@ services:
             - '.:/var/www/html'
         networks:
             - sail
+            - team-12-network
         depends_on:
             - mysql
     mysql:
@@ -51,6 +52,10 @@ services:
 networks:
     sail:
         driver: bridge
+    team-12-network:
+        name: team-12-network
+        external: true
 volumes:
     sail-mysql:
         driver: local
+

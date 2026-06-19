@@ -1,0 +1,135 @@
+version: '3.8'
+
+services:
+  # =========================================================================
+  # 1. API GATEWAY (NGINX)
+  # =========================================================================
+  gateway:
+    image: nginx:alpine
+    container_name: team-12-api-gateway
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./Gateway/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - rute-jadwal-app
+      - ticket-pembayaran-web
+    networks:
+      - team-12-network
+
+  # =========================================================================
+  # 2. SERVICE: RUTE & JADWAL (Alvin)
+  # =========================================================================
+  # PHP Application Runner
+  rute-jadwal-app:
+    build:
+      context: ./Services/Rute-Jadwal/vendor/laravel/sail/runtimes/8.5
+      dockerfile: Dockerfile
+      args:
+        WWWGROUP: '1000'
+    container_name: rute-jadwal-app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./Services/Rute-Jadwal:/var/www/html
+    environment:
+      - WWWUSER=1000
+      - DB_CONNECTION=mysql
+      - DB_HOST=rute-jadwal-db
+      - DB_PORT=3306
+      - DB_DATABASE=102022430022_rute_jadwal_service
+      - DB_USERNAME=root
+      - DB_PASSWORD=rootpassword
+    depends_on:
+      - rute-jadwal-db
+    networks:
+      - team-12-network
+
+
+
+  # MySQL Database
+  rute-jadwal-db:
+    image: mysql:8.4
+    container_name: rute-jadwal-db
+    restart: unless-stopped
+    environment:
+      - MYSQL_DATABASE=102022430022_rute_jadwal_service
+      - MYSQL_ROOT_PASSWORD=rootpassword
+    volumes:
+      - rute_jadwal_dbdata:/var/lib/mysql
+    networks:
+      - team-12-network
+
+  # =========================================================================
+  # 3. SERVICE: TIKET & PEMBAYARAN (Bayu)
+  # =========================================================================
+  # PHP Application Runner
+  ticket-pembayaran-app:
+    build:
+      context: ./Services/Ticket-Pembayaran
+      dockerfile: Dockerfile
+    container_name: ticket-pembayaran-app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./Services/Ticket-Pembayaran:/var/www
+    environment:
+      - DB_CONNECTION=mysql
+      - DB_HOST=ticket-pembayaran-db
+      - DB_PORT=3306
+      - DB_DATABASE=102022400251_ticket_pembayaran_service
+      - DB_USERNAME=root
+      - DB_PASSWORD=rootpassword
+      - REDIS_HOST=ticket-pembayaran-redis
+    depends_on:
+      - ticket-pembayaran-db
+      - ticket-pembayaran-redis
+    networks:
+      - team-12-network
+
+  # Nginx Web Server
+  ticket-pembayaran-web:
+    image: nginx:alpine
+    container_name: ticket-pembayaran-web
+    restart: unless-stopped
+    volumes:
+      - ./Services/Ticket-Pembayaran:/var/www
+      - ./Services/Ticket-Pembayaran/docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - ticket-pembayaran-app
+    networks:
+      - team-12-network
+
+  # MySQL Database
+  ticket-pembayaran-db:
+    image: mysql:8.0
+    container_name: ticket-pembayaran-db
+    restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password --skip-name-resolve
+    environment:
+      - MYSQL_DATABASE=102022400251_ticket_pembayaran_service
+      - MYSQL_ROOT_PASSWORD=rootpassword
+    volumes:
+      - ticket_pembayaran_dbdata:/var/lib/mysql
+    networks:
+      - team-12-network
+
+  # Redis
+  ticket-pembayaran-redis:
+    image: redis:alpine
+    container_name: ticket-pembayaran-redis
+    restart: unless-stopped
+    networks:
+      - team-12-network
+
+networks:
+  team-12-network:
+    name: team-12-network
+    driver: bridge
+
+volumes:
+  rute_jadwal_dbdata:
+    driver: local
+  ticket_pembayaran_dbdata:
+    driver: local
