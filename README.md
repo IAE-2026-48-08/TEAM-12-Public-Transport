@@ -5,6 +5,7 @@ Repositori ini menggabungkan seluruh layanan (microservices) untuk sistem transp
 ## Anggota Kelompok
 *   **Alvin Hibatullah** (NIM: 102022430022) — Service Rute & Jadwal
 *   **Bayu** (NIM: 102022400251) — Service Tiket & Pembayaran
+*   **Renaya** (NIM:102022400154) - Service Notifikasi Delay
 
 ---
 
@@ -84,3 +85,5 @@ Berikut adalah catatan rekap penggunaan AI untuk membantu menyelesaikan kendala 
 *   Menguji koneksi pemanggilan API internal ke container rute-jadwal-app untuk mencocokkan ketersediaan jadwal sebelum tiket dibuat.
 *   Mengatur routing /central agar mengarah ke dashboard integrasi web UI miliknya.
 **
+
+### 3. Bagian Notifikasi Delay (Renaya - 102022400154)
