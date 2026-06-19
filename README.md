@@ -2,13 +2,13 @@
 
 Repositori ini menggabungkan seluruh layanan (microservices) untuk sistem transportasi umum Team-12, menggunakan arsitektur gabungan Docker dan API Gateway.
 
-## 🚀 Anggota Kelompok
+## Anggota Kelompok
 *   **Alvin Hibatullah** (NIM: 102022430022) — Service Rute & Jadwal
 *   **Bayu** (NIM: 102022400251) — Service Tiket & Pembayaran
 
 ---
 
-## 🏗️ Arsitektur & Komponen
+## Arsitektur & Komponen
 Sistem ini terdiri dari beberapa komponen yang berjalan di dalam Docker container dan saling terhubung melalui jaringan `team-12-network`:
 
 1.  **API Gateway (Nginx)**: Port eksternal `80`, merutekan request luar ke layanan internal yang sesuai.
@@ -17,7 +17,7 @@ Sistem ini terdiri dari beberapa komponen yang berjalan di dalam Docker containe
 
 ---
 
-## 🛠️ Cara Menjalankan Layanan (Docker)
+## Cara Menjalankan Layanan (Docker)
 
 Pastikan Docker Desktop Anda sudah aktif, lalu jalankan perintah berikut di root folder proyek:
 
@@ -38,7 +38,7 @@ Setelah menyala, Anda dapat mengakses layanan melalui API Gateway di:
 
 ---
 
-## 🤖 Rekap Log Prompting AI Kelompok
+## Rekap Log Prompting AI Kelompok
 
 Berikut adalah catatan rekap penggunaan AI untuk membantu menyelesaikan kendala pemrograman selama pengerjaan proyek dari Tugas 2, Tugas 3, hingga Tugas Besar.
 
