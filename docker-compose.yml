@@ -8,7 +8,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./Gateway/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./Gateway/nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - rute-jadwal-app
       - ticket-pembayaran-web

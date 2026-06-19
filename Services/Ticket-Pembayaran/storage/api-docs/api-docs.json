@@ -4,13 +4,13 @@
         "title": "Tickets Service API Documentation",
         "description": "L5 Swagger OpenApi API Documentation for Tickets Microservice",
         "contact": {
-            "email": "bayu@example.com"
+            "email": "bayusamudera@example.com"
         },
         "version": "1.0.0"
     },
     "servers": [
         {
-            "url": "http://localhost:8000/api",
+            "url": "http://localhost/api",
             "description": "Local Tickets Service API Server"
         }
     ],
@@ -58,7 +58,7 @@
                 },
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "bearerAuth": []
                     }
                 ]
             },
@@ -133,7 +133,7 @@
                 },
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "bearerAuth": []
                     }
                 ]
             }
@@ -213,7 +213,7 @@
                 },
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "bearerAuth": []
                     }
                 ]
             }
@@ -221,11 +221,11 @@
     },
     "components": {
         "securitySchemes": {
-            "ApiKeyAuth": {
-                "type": "apiKey",
-                "description": "Enter NIM Key to access the endpoints",
-                "name": "X-IAE-KEY",
-                "in": "header"
+            "bearerAuth": {
+                "type": "http",
+                "description": "Masukkan Token JWT SSO untuk mengakses endpoint",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
             }
         }
     },

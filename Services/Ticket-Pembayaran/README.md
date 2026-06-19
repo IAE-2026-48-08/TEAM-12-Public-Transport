@@ -63,13 +63,8 @@ Mengakses data model `Ticket` menggunakan query GraphQL:
 *   Endpoint GraphQL: `/graphql`
 *   GraphQL Playground (Interactive UI): `/graphql-playground`
 
-### 3. Web Dashboard Integrasi Pusat
-*   `GET /central` - Halaman monitoring status koneksi, log audit, dan publisher event
-*   `POST /central/login` - Melakukan M2M authentication ke Server SSO Pusat
-*   `POST /central/audit` - Mengirim audit transaksi dalam format SOAP XML ke pusat
-*   `POST /central/publish` - Mempublikasikan JSON event ke RabbitMQ
-
 ---
+
 
 ## ⚙️ Panduan Instalasi & Menjalankan Projek
 
@@ -108,6 +103,5 @@ docker-compose exec app php artisan l5-swagger:generate
 
 ### 6. Akses Layanan
 Buka browser Anda dan akses tautan berikut:
-*   **Web Dashboard Integrasi:** [http://localhost:8000/central](http://localhost:8000/central)
 *   **REST API Swagger Documentation:** [http://localhost:8000/api/documentation](http://localhost:8000/api/documentation)
 *   **GraphQL Playground:** [http://localhost:8000/graphql-playground](http://localhost:8000/graphql-playground)

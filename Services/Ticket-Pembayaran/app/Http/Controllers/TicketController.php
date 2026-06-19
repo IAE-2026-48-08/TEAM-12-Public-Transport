@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
+use App\Services\Iae\IaeAuditClient;
+use App\Services\Iae\IaePublisher;
 
 #[OA\Info(
     version: "1.0.0",
@@ -13,15 +15,15 @@ use OpenApi\Attributes as OA;
     contact: new OA\Contact(email: "bayusamudera@example.com")
 )]
 #[OA\Server(
-    url: "http://localhost:8000/api",
+    url: "http://localhost/api",
     description: "Local Tickets Service API Server"
 )]
 #[OA\SecurityScheme(
-    securityScheme: "ApiKeyAuth",
-    type: "apiKey",
-    in: "header",
-    name: "X-IAE-KEY",
-    description: "Masukkan NIM untuk mengakses endpoint"
+    securityScheme: "bearerAuth",
+    type: "http",
+    scheme: "bearer",
+    bearerFormat: "JWT",
+    description: "Masukkan Token JWT SSO untuk mengakses endpoint"
 )]
 class TicketController extends Controller
 {
@@ -29,7 +31,7 @@ class TicketController extends Controller
         path: "/v1/tickets",
         summary: "Get list of tickets (Collection)",
         tags: ["Tickets"],
-        security: [["ApiKeyAuth" => []]],
+        security: [["bearerAuth" => []]],
         responses: [
             new OA\Response(
                 response: 200,
@@ -67,7 +69,7 @@ class TicketController extends Controller
         path: "/v1/tickets/{id}",
         summary: "Get details of a specific ticket (Resource)",
         tags: ["Tickets"],
-        security: [["ApiKeyAuth" => []]],
+        security: [["bearerAuth" => []]],
         parameters: [
             new OA\Parameter(
                 name: "id",
@@ -133,7 +135,7 @@ class TicketController extends Controller
         path: "/v1/tickets",
         summary: "Create a new ticket (Action)",
         tags: ["Tickets"],
-        security: [["ApiKeyAuth" => []]],
+        security: [["bearerAuth" => []]],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
@@ -168,7 +170,7 @@ class TicketController extends Controller
             )
         ]
     )]
-    public function store(Request $request)
+    public function store(Request $request, IaeAuditClient $audit, IaePublisher $publisher)
     {
         $request->validate([
             'schedule_id' => 'required',
@@ -182,13 +184,62 @@ class TicketController extends Controller
         $ticket->status = 'LUNAS';
         $ticket->save();
 
+        $receipt = null;
+        try {
+            $result = $audit->audit('TicketTransactionCreated', [
+                'event'          => 'ticket.purchased',
+                'ticket_id'      => $ticket->id,
+                'schedule_id'    => $ticket->schedule_id,
+                'seat_number'    => $ticket->seat_number,
+                'total_price'    => $ticket->total_price,
+                'actor'          => $request->attributes->get('iae_subject'),
+            ]);
+            $receipt = $result['receipt'];
+        } catch (\Throwable $e) {
+            report($e);
+        }
+
+        if ($receipt) {
+            $ticket->receipt_number = $receipt;
+            $ticket->status = 'AUDITED';
+            $ticket->save();
+        }
+
+        try {
+            $publisher->publish([
+                'event_name'            => 'ticket.purchased',
+                'service_name'          => 'Tickets-Service',
+                'api_version'           => 'v1',
+                'occurred_at'           => now()->toIso8601String(),
+                'ticket' => [
+                    'id'                    => $ticket->id,
+                    'schedule_id'           => $ticket->schedule_id,
+                    'seat_number'           => $ticket->seat_number,
+                    'total_price'           => $ticket->total_price,
+                    'status'                => $ticket->status,
+                    'legacy_receipt_number' => $receipt,
+                ],
+                'published_by' => [
+                    'api_key' => config('services.iae.api_key'),
+                    'team_id' => config('services.iae.team_id'),
+                ],
+                'approved_by'           => [
+                    'sso_subject' => $request->attributes->get('iae_subject'),
+                    'role'        => $request->attributes->get('iae_role'),
+                ],
+            ]);
+        } catch (\Throwable $e) {
+            report($e);
+        }
+
         return response()->json([
             'status' => 'success',
             'message' => 'Resource created successfully',
             'data' => $ticket,
             'meta' => [
                 'service_name' => 'Tickets-Service',
-                'api_version' => 'v1'
+                'api_version' => 'v1',
+                'audit_receipt' => $receipt,
             ]
         ], 201);
     }

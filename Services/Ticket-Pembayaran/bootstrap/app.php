@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'iae.auth' => \App\Http\Middleware\CheckIaeKey::class,
+            'iae.jwt' => \App\Http\Middleware\VerifyIaeJwt::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

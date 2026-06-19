@@ -82,5 +82,4 @@ Berikut adalah catatan rekap penggunaan AI untuk membantu menyelesaikan kendala 
 #### Tugas Besar (API Gateway & Jaringan Docker)
 *   Menhubungkan container Nginx ticket-pembayaran-web ke jaringan bersama kelompok.
 *   Menguji koneksi pemanggilan API internal ke container rute-jadwal-app untuk mencocokkan ketersediaan jadwal sebelum tiket dibuat.
-*   Mengatur routing /central agar mengarah ke dashboard integrasi web UI miliknya.
 **
