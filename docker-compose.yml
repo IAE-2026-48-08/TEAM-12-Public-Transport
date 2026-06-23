@@ -106,6 +106,54 @@ services:
     networks:
       - team-12-network
 
+  notifikasi-db:
+    image: mysql:8.0
+    container_name: notifikasi-db
+    restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password --skip-name-resolve
+    environment:
+      - MYSQL_DATABASE=102022400154_notifikasi_delay_service
+      - MYSQL_ROOT_PASSWORD=rootpassword
+    volumes:
+      - notifikasi_dbdata:/var/lib/mysql
+    networks:
+      - team-12-network
+
+  notifikasi-app:
+    build:
+      context: ./Services/Notifikasi
+      dockerfile: Dockerfile
+    container_name: notifikasi-app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./Services/Notifikasi:/var/www
+    environment:
+      - DB_CONNECTION=mysql
+      - DB_HOST=notifikasi-db
+      - DB_PORT=3306
+      - DB_DATABASE=102022400154_notifikasi_delay_service
+      - DB_USERNAME=root
+      - DB_PASSWORD=rootpassword
+      - IAE_SSO_URL=https://iae-sso.virtualfri.id
+      - IAE_TEAM=TEAM-12
+    depends_on:
+      - notifikasi-db
+    networks:
+      - team-12-network
+
+  notifikasi-web:
+    image: nginx:alpine
+    container_name: notifikasi-web
+    restart: unless-stopped
+    volumes:
+      - ./Services/Notifikasi:/var/www
+      - ./Services/Notifikasi/docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - notifikasi-app
+    networks:
+      - team-12-network
+
 networks:
   team-12-network:
     name: team-12-network
@@ -116,3 +164,6 @@ volumes:
     driver: local
   ticket_pembayaran_dbdata:
     driver: local
+  notifikasi_dbdata:
+    driver: local
+

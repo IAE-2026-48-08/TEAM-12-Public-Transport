@@ -19,6 +19,13 @@ use App\Services\Iae\IaePublisher;
     description: "Local Tickets Service API Server"
 )]
 #[OA\SecurityScheme(
+    securityScheme: "ApiKeyAuth",
+    type: "apiKey",
+    in: "header",
+    name: "X-IAE-KEY",
+    description: "Masukkan API Key (NIM: 102022400251)"
+)]
+#[OA\SecurityScheme(
     securityScheme: "bearerAuth",
     type: "http",
     scheme: "bearer",
@@ -31,7 +38,7 @@ class TicketController extends Controller
         path: "/v1/tickets",
         summary: "Get list of tickets (Collection)",
         tags: ["Tickets"],
-        security: [["bearerAuth" => []]],
+        security: [["bearerAuth" => [], "ApiKeyAuth" => []]],
         responses: [
             new OA\Response(
                 response: 200,
@@ -47,7 +54,7 @@ class TicketController extends Controller
             ),
             new OA\Response(
                 response: 401,
-                description: "Unauthorized - Invalid X-IAE-KEY"
+                description: "Unauthorized - Invalid Token or X-IAE-KEY"
             )
         ]
     )]
@@ -69,7 +76,7 @@ class TicketController extends Controller
         path: "/v1/tickets/{id}",
         summary: "Get details of a specific ticket (Resource)",
         tags: ["Tickets"],
-        security: [["bearerAuth" => []]],
+        security: [["bearerAuth" => [], "ApiKeyAuth" => []]],
         parameters: [
             new OA\Parameter(
                 name: "id",
@@ -135,13 +142,13 @@ class TicketController extends Controller
         path: "/v1/tickets",
         summary: "Create a new ticket (Action)",
         tags: ["Tickets"],
-        security: [["bearerAuth" => []]],
+        security: [["bearerAuth" => [], "ApiKeyAuth" => []]],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
                 required: ["schedule_id", "seat_number"],
                 properties: [
-                    new OA\Property(property: "schedule_id", type: "string", example: "SCH-12345"),
+                    new OA\Property(property: "schedule_id", type: "string", example: "1"),
                     new OA\Property(property: "seat_number", type: "string", example: "A12"),
                     new OA\Property(property: "total_price", type: "integer", example: 75000, nullable: true)
                 ]
@@ -176,6 +183,25 @@ class TicketController extends Controller
             'schedule_id' => 'required',
             'seat_number' => 'required'
         ]);
+
+        // Verifikasi schedule_id ke Rute-Jadwal Service secara internal via REST API
+        $token = $request->bearerToken();
+        try {
+            $response = \Illuminate\Support\Facades\Http::withToken($token)
+                ->timeout(5)
+                ->get("http://rute-jadwal-app/api/v1/schedules/{$request->schedule_id}");
+
+            if ($response->failed()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Jadwal (schedule_id) tidak valid atau tidak ditemukan di Rute-Jadwal Service.',
+                    'errors' => null
+                ], 404);
+            }
+        } catch (\Throwable $e) {
+            // Jika service Rute-Jadwal offline, catat error tapi tetap izinkan/sesuaikan toleransi fallback
+            report($e);
+        }
 
         $ticket = new Ticket();
         $ticket->schedule_id = $request->schedule_id;

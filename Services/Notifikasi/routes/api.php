@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\DelayController;
 use App\Services\SsoService;
 
-Route::middleware('apikey')->prefix('v1')->group(function () {
+Route::middleware(['iae.jwt', 'iae.auth'])->prefix('v1')->group(function () {
 
     Route::get('/delays', [DelayController::class, 'index']);
 
@@ -21,5 +21,3 @@ Route::get('/test-sso', function () {
         'token' => SsoService::getToken()
     ];
 });
-
-Route::post('/test-rabbit', [DelayController::class, 'testRabbit']);

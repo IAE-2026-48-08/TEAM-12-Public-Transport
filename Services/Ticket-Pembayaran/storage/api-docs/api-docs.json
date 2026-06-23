@@ -53,12 +53,13 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized - Invalid X-IAE-KEY"
+                        "description": "Unauthorized - Invalid Token or X-IAE-KEY"
                     }
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bearerAuth": [],
+                        "ApiKeyAuth": []
                     }
                 ]
             },
@@ -80,7 +81,7 @@
                                 "properties": {
                                     "schedule_id": {
                                         "type": "string",
-                                        "example": "SCH-12345"
+                                        "example": "1"
                                     },
                                     "seat_number": {
                                         "type": "string",
@@ -133,7 +134,8 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bearerAuth": [],
+                        "ApiKeyAuth": []
                     }
                 ]
             }
@@ -213,7 +215,8 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "bearerAuth": [],
+                        "ApiKeyAuth": []
                     }
                 ]
             }
@@ -221,6 +224,12 @@
     },
     "components": {
         "securitySchemes": {
+            "ApiKeyAuth": {
+                "type": "apiKey",
+                "description": "Masukkan API Key (NIM: 102022400251)",
+                "name": "X-IAE-KEY",
+                "in": "header"
+            },
             "bearerAuth": {
                 "type": "http",
                 "description": "Masukkan Token JWT SSO untuk mengakses endpoint",

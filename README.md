@@ -15,6 +15,7 @@ Sistem ini terdiri dari beberapa komponen yang berjalan di dalam Docker containe
 1.  **API Gateway (Nginx)**: Port eksternal `80`, merutekan request luar ke layanan internal yang sesuai.
 2.  **Layanan Rute & Jadwal**: Mengelola rute dan waktu perjalanan (Laravel Sail).
 3.  **Layanan Tiket & Pembayaran**: Mengelola pemesanan tiket dan transaksi pembayaran.
+4.  **Layanan Notifikasi Delay**: Mengelola pencatatan kendala keterlambatan armada.
 
 ---
 
@@ -31,6 +32,9 @@ docker exec -it rute-jadwal-app php artisan migrate --seed
 
 # 3. Lakukan migrasi database untuk Ticket & Pembayaran
 docker exec -it ticket-pembayaran-app php artisan migrate --seed
+
+# 4. Lakukan migrasi database untuk Notifikasi Delay
+docker exec -it notifikasi-app php artisan migrate
 ```
 
 Setelah menyala, Anda dapat mengakses layanan melalui API Gateway di:
@@ -103,11 +107,10 @@ Berikut adalah catatan rekap penggunaan AI untuk membantu menyelesaikan kendala 
 * Pembuatan route API POST /api/test-rabbit untuk pengujian integrasi publisher ke antrean pesan.
 * Implementasi ApiKeyMiddleware untuk mengamankan akses API dengan verifikasi header X-IAE-KEY (NIM: 102022400154).
 * Integrasi AuditService untuk mengirimkan data transaksi ke sistem SOAP Legacy sebagai syarat validasi transaksi kritis.
-
-
+* Penyusunan dokumen analisis_tugas_3.md yang merinci justifikasi transaksi kritis (data delay jadwal) yang memerlukan audit SOAP dan notifikasi RabbitMQ.
+* Penyusunan Sequence Diagram untuk interaksi layanan notification-delay-service dengan SSO dan sistem Cloud Pusat.
+* Pemetaan role pengguna ke tabel lokal setelah berhasil menangkap payload JWT dari SSO.
 
 #### Tugas Besar (API Gateway & Jaringan Docker)
-* Penyusunan dokumen analisis_tugas_3.md yang merinci justifikasi transaksi kritis (data delay jadwal) yang memerlukan audit SOAP dan notifikasi RabbitMQ.
-* Penyusunan Sequence Diagram untuk interaksi layanan notification-delay-service dengan SSO Dosen dan sistem Cloud Pusat.
-* Finalisasi pengujian end-to-end menggunakan Postman untuk memastikan sinkronisasi data antar-service melalui API Gateway.
-* Pemetaan role pengguna ke tabel lokal setelah berhasil menangkap payload JWT dari SSO Dosen.
+* Mengunggah source code service Notifikasi Delay ke repositori kelompok.
+* Memperbarui dokumentasi README.md kelompok untuk menambahkan log pengerjaan service Notifikasi Delay.

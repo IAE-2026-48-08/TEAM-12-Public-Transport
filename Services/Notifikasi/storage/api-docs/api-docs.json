@@ -7,8 +7,8 @@
     },
     "servers": [
         {
-            "url": "http://127.0.0.1:8000",
-            "description": "Local Server"
+            "url": "http://localhost",
+            "description": "Local API Gateway Server"
         }
     ],
     "paths": {
@@ -22,8 +22,162 @@
                 "responses": {
                     "200": {
                         "description": "Success"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": [],
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Delays"
+                ],
+                "summary": "Create a new delay record",
+                "operationId": "4bc9467808df1e1ddb401e971dfebd90",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "schedule_code",
+                                    "reason",
+                                    "delay_minutes"
+                                ],
+                                "properties": {
+                                    "schedule_code": {
+                                        "type": "string",
+                                        "example": "1"
+                                    },
+                                    "reason": {
+                                        "type": "string",
+                                        "example": "Cuaca buruk / hujan lebat"
+                                    },
+                                    "delay_minutes": {
+                                        "type": "integer",
+                                        "example": 30
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created successfully"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": [],
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/delays/{id}": {
+            "get": {
+                "tags": [
+                    "Delays"
+                ],
+                "summary": "Get specific delay by ID",
+                "operationId": "c9b131865104a2ef806d0572b702d853",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the delay record",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Delay not found"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": [],
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/delays/notifications": {
+            "post": {
+                "tags": [
+                    "Delays"
+                ],
+                "summary": "Send delay notification mock",
+                "operationId": "9156fdf9106ad598e31c3a593c7b4adc",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "schedule_code"
+                                ],
+                                "properties": {
+                                    "schedule_code": {
+                                        "type": "string",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": [],
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "ApiKeyAuth": {
+                "type": "apiKey",
+                "description": "Masukkan API Key (NIM: 102022400154)",
+                "name": "X-IAE-KEY",
+                "in": "header"
+            },
+            "bearerAuth": {
+                "type": "http",
+                "description": "Masukkan Token JWT SSO untuk mengakses endpoint",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
             }
         }
     },
