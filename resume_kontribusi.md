@@ -24,9 +24,11 @@ Dokumen ini merupakan rangkuman kontribusi pengerjaan coding, integrasi, dan pem
 *   **Kontribusi Teknis**:
     *   Mengembangkan modul **Tiket & Pembayaran** (Laravel + Nginx).
     *   Mengonfigurasi dual middleware authentication pada service tiket (JWT SSO Dosen + API Key Kredensial NIM Bayu).
+    *   Melakukan refaktorisasi middleware autentikasi (`CheckIaeKey.php`) menggunakan helper `config()` untuk menggantikan `env()` agar tidak terpengaruh oleh isu cache konfigurasi Laravel.
     *   Menghubungkan alur transaksi pemesanan tiket (`POST /api/v1/tickets`) secara langsung ke Service Rute & Jadwal (`rute-jadwal-app`) secara internal via REST API untuk verifikasi jadwal.
     *   Mengembangkan consumer background process RabbitMQ menggunakan library `php-amqplib` untuk menangkap event-event broadcast dari Cloud Pusat.
     *   Mengintegrasikan endpoint GraphQL dan GraphQL Playground di belakang API Gateway.
+    *   Menyempurnakan konfigurasi `docker-compose.yml` dengan menambahkan dependency `notifikasi-web` pada service `gateway` guna memastikan urutan start-up container berjalan dengan benar.
 
 ---
 

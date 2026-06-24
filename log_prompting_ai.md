@@ -13,6 +13,8 @@ Berikut adalah rekap terperinci penggunaan AI untuk memandu pengerjaan, troubles
     *   *Prompt*: "Cara decode token JWT RS256 menggunakan package firebase/php-jwt di Laravel 11 tanpa menggunakan library auth bawaan."
 *   **API Gateway & Docker Network**:
     *   *Prompt*: "Bagaimana cara membuat custom network bridge bernama team-12-network di docker-compose.yml agar bisa dipakai bersama oleh service buatan teman sekelompok?"
+*   **Integrasi Git Pull & Pemeliharaan Cache**:
+    *   *Prompt*: "Bagaimana cara memverifikasi, melakukan sinkronisasi cache Laravel, dan me-restart container docker-compose setelah menarik update (git pull) yang memodifikasi middleware autentikasi dan orchestrator?"
 
 ---
 
