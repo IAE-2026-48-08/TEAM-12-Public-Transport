@@ -15,7 +15,7 @@ class CheckIaeKey
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $nimMahasiswa = env('MY_NIM_KEY', '102022400251');
+        $nimMahasiswa = config('services.iae.nim', '102022400251');
         
         if ($request->header('X-IAE-KEY') !== $nimMahasiswa) {
             return response()->json([
